@@ -1,4 +1,5 @@
 window.onload = function() {
+    var clickMarker, userMarker, path;
     if ("geolocation" in navigator) {
         var geoFail = null;
         var geoOptions = { enableHighAccuracy: true }
@@ -10,7 +11,6 @@ window.onload = function() {
             disableDefaultUI: true
         });
         map.setTilt(0);
-        var clickMarker, userMarker, path;
         
         map.addListener('click', function(e) {
             if (!clickMarker) {
@@ -40,9 +40,7 @@ window.onload = function() {
       } else {
         alert("Location is not available. Please enable to continue");
       }
-}
-
-function update() {
+    function update() {
     var bounds = new google.maps.LatLngBounds();
     if (userMarker) bounds.extend(userMarker.getPosition());
     if (clickMarker) bounds.extend(clickMarker.getPosition());
@@ -62,4 +60,5 @@ function update() {
           });   
         path.setMap(map);
     }
+}
 }
