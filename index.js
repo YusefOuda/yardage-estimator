@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
     var clickMarker, userMarker, path;
     if ("geolocation" in navigator) {
         var geoFail = null;
@@ -11,21 +11,21 @@ window.onload = function() {
             disableDefaultUI: true
         });
         map.setTilt(0);
-        
-        map.addListener('click', function(e) {
+
+        map.addListener('click', function (e) {
             if (!clickMarker) {
                 clickMarker = new google.maps.Marker({
                     position: e.latLng,
                     map: map
-                  });
+                });
             } else {
                 clickMarker.setPosition(e.latLng);
             }
             update();
         });
 
-        var geoSuccess = function(position) {
-            var loc = {lat: position.coords.latitude, lng: position.coords.longitude};
+        var geoSuccess = function (position) {
+            var loc = { lat: position.coords.latitude, lng: position.coords.longitude };
             if (!userMarker) {
                 userMarker = new google.maps.Marker({
                     position: loc,
@@ -37,28 +37,28 @@ window.onload = function() {
             update();
         }
         navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
-      } else {
+    } else {
         alert("Location is not available. Please enable to continue");
-      }
-    function update() {
-    var bounds = new google.maps.LatLngBounds();
-    if (userMarker) bounds.extend(userMarker.getPosition());
-    if (clickMarker) bounds.extend(clickMarker.getPosition());
-    map.fitBounds(bounds);
-    if (userMarker && clickMarker) {
-        var yards = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), clickMarker.getPosition()) * 1.09361;
-        document.getElementById('yards').innerHTML = Math.round(yards) + ' yards';
-        if (path) {
-            path.setMap(null); 
-        }
-        path = new google.maps.Polyline({
-            path: [userMarker.getPosition(), clickMarker.getPosition()],
-            geodesic: true,
-            strokeColor: '#FF0000',
-            strokeOpacity: 1.0,
-            strokeWeight: 2
-          });   
-        path.setMap(map);
     }
-}
+    function update() {
+        var bounds = new google.maps.LatLngBounds();
+        if (userMarker) bounds.extend(userMarker.getPosition());
+        if (clickMarker) bounds.extend(clickMarker.getPosition());
+        map.fitBounds(bounds);
+        if (userMarker && clickMarker) {
+            var yards = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), clickMarker.getPosition()) * 1.09361;
+            document.getElementById('yards').innerHTML = Math.round(yards) + ' yards';
+            if (path) {
+                path.setMap(null);
+            }
+            path = new google.maps.Polyline({
+                path: [userMarker.getPosition(), clickMarker.getPosition()],
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            path.setMap(map);
+        }
+    }
 }
