@@ -21,7 +21,7 @@ window.onload = function () {
             } else {
                 clickMarker.setPosition(e.latLng);
             }
-            update();
+            update(true);
         });
 
         var geoSuccess = function (position) {
@@ -34,17 +34,19 @@ window.onload = function () {
             } else {
                 userMarker.setPosition(loc);
             }
-            update();
+            update(false);
         }
         navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
     } else {
         alert("Location is not available. Please enable to continue");
     }
-    function update() {
-        var bounds = new google.maps.LatLngBounds();
-        if (userMarker) bounds.extend(userMarker.getPosition());
-        if (clickMarker) bounds.extend(clickMarker.getPosition());
-        map.fitBounds(bounds);
+    function update(setBounds) {
+        if (setBounds) {
+            var bounds = new google.maps.LatLngBounds();
+            if (userMarker) bounds.extend(userMarker.getPosition());
+            if (clickMarker) bounds.extend(clickMarker.getPosition());
+            map.fitBounds(bounds);
+        }
         if (userMarker && clickMarker) {
             var yards = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), clickMarker.getPosition()) * 1.09361;
             document.getElementById('yards').innerHTML = Math.round(yards) + ' yards';
