@@ -40,6 +40,7 @@ window.onload = function () {
                 updateFirst = false;
             } else {
                 update(false);
+            }
         }
         navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
     } else {
