@@ -37,6 +37,7 @@ window.onload = function () {
             update(false);
         }
         navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
+        update(true);
     } else {
         alert("Location is not available. Please enable to continue");
     }
