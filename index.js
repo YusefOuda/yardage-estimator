@@ -5,7 +5,7 @@ window.onload = function () {
         var geoOptions = { enableHighAccuracy: true }
         var latlng = new google.maps.LatLng(37.09024, -95.712891);
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 3,
+            zoom: 1,
             mapTypeId: 'satellite',
             center: latlng,
             disableDefaultUI: true
@@ -37,7 +37,6 @@ window.onload = function () {
             update(false);
         }
         navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
-        update(true);
     } else {
         alert("Location is not available. Please enable to continue");
     }
