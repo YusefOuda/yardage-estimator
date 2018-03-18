@@ -38,7 +38,7 @@ window.onload = function () {
             if (updateFirst) {
                 update(true);
                 updateFirst = false;
-                map.setZoom(15);
+                map.setZoom(17);
             } else {
                 update(false);
             }
