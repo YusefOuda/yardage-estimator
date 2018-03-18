@@ -5,7 +5,6 @@ window.onload = function () {
         var geoOptions = { enableHighAccuracy: true }
         var latlng = new google.maps.LatLng(37.09024, -95.712891);
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 1,
             mapTypeId: 'satellite',
             center: latlng,
             disableDefaultUI: true
