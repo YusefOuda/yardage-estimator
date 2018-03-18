@@ -1,6 +1,7 @@
 window.onload = function () {
     var clickMarker, userMarker, path;
     if ("geolocation" in navigator) {
+        var updateFirst = true;
         var geoFail = null;
         var geoOptions = { enableHighAccuracy: true }
         var latlng = new google.maps.LatLng(37.09024, -95.712891);
@@ -34,7 +35,11 @@ window.onload = function () {
             } else {
                 userMarker.setPosition(loc);
             }
-            update(false);
+            if (updateFirst) {
+                update(true);
+                updateFirst = false;
+            } else {
+                update(false);
         }
         navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
     } else {
