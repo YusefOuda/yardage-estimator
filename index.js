@@ -1,5 +1,6 @@
 window.onload = function () {
-    var clickMarker, userMarker, path;
+    var clickMarker1, clickMarker2, currentClickMarker, userMarker, path, watchId;
+    currentClickMarker = 1;
     if ("geolocation" in navigator) {
         var geoFail = null;
         var geoOptions = { enableHighAccuracy: true }
@@ -13,15 +14,41 @@ window.onload = function () {
         map.setTilt(0);
 
         map.addListener('click', function (e) {
-            if (!clickMarker) {
-                clickMarker = new google.maps.Marker({
-                    position: e.latLng,
-                    map: map
-                });
-            } else {
-                clickMarker.setPosition(e.latLng);
+            if (watchId === null) { // not tracking
+                if (currentClickMarker === 1) {
+                    if (!clickMarker1) {
+                        clickMarker1 = new google.maps.Marker({
+                            position: e.latLng,
+                            map: map
+                        });
+                    } else {
+                        clickMarker1.setPosition(e.latLng);
+                    }
+                    update(true);
+                    currentClickMarker = 2;
+                } else {
+                    if (!clickMarker2) {
+                        clickMarker2 = new google.maps.Marker({
+                            position: e.latLng,
+                            map: map
+                        });
+                    } else {
+                        clickMarker2.setPosition(e.latLng);
+                    }
+                    update(true);
+                    currentClickMarker = 1;
+                }
+            } else { // tracking position, only can add 1 marker
+                if (!clickMarker1) {
+                    clickMarker1 = new google.maps.Marker({
+                        position: e.latLng,
+                        map: map
+                    });
+                } else {
+                    clickMarker1.setPosition(e.latLng);
+                }
+                update(true);
             }
-            update(true);
         });
 
         var geoSuccess = function (position) {
@@ -36,7 +63,26 @@ window.onload = function () {
             }
             update(false);
         }
-        navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
+        watchId = navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
+
+        var checkbox = this.document.getElementById("watch");
+        watch.addEventListener('change', function() {
+            if (clickMarker1) clickMarker1.setMap(null);
+            if (clickMarker2) clickMarker2.setMap(null);
+            if (userMarker) userMarker.setMap(null);
+            if (path) path.setMap(null);
+            clickMarker1 = null;
+            clickMarker2 = null;
+            userMarker = null;
+            path = null;
+
+            if (this.checked) {
+                watchId = navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
+            } else {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+        });
     } else {
         alert("Location is not available. Please enable to continue");
     }
@@ -44,17 +90,32 @@ window.onload = function () {
         if (setBounds) {
             var bounds = new google.maps.LatLngBounds();
             if (userMarker) bounds.extend(userMarker.getPosition());
-            if (clickMarker) bounds.extend(clickMarker.getPosition());
+            if (clickMarker1) bounds.extend(clickMarker1.getPosition());
+            if (clickMarker2) bounds.extend(clickMarker2.getPosition());
             map.fitBounds(bounds);
         }
-        if (userMarker && clickMarker) {
-            var yards = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), clickMarker.getPosition()) * 1.09361;
+        if (userMarker && clickMarker1) {
+            var yards = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), clickMarker1.getPosition()) * 1.09361;
             document.getElementById('yards').innerHTML = Math.round(yards) + ' yards';
             if (path) {
                 path.setMap(null);
             }
             path = new google.maps.Polyline({
-                path: [userMarker.getPosition(), clickMarker.getPosition()],
+                path: [userMarker.getPosition(), clickMarker1.getPosition()],
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            path.setMap(map);
+        } else if (clickMarker1 && clickMarker2) {
+            var yards = google.maps.geometry.spherical.computeDistanceBetween(clickMarker1.getPosition(), clickMarker2.getPosition()) * 1.09361;
+            document.getElementById('yards').innerHTML = Math.round(yards) + ' yards';
+            if (path) {
+                path.setMap(null);
+            }
+            path = new google.maps.Polyline({
+                path: [clickMarker1.getPosition(), clickMarker2.getPosition()],
                 geodesic: true,
                 strokeColor: '#FF0000',
                 strokeOpacity: 1.0,

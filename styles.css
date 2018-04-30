@@ -18,3 +18,14 @@ body, html {
     margin-top: 1rem;
     margin-bottom: 0;
 }
+
+.watch-container {
+    font-size: 2rem;
+    text-align: center;
+}
+
+#watch {
+    vertical-align: middle;
+    height: 30px;
+    width: 30px;
+}
