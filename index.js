@@ -2,11 +2,12 @@ window.onload = function () {
     var clickMarker1, clickMarker2, currentClickMarker, userMarker, path, watchId;
     currentClickMarker = 1;
     if ("geolocation" in navigator) {
+        var updateFirst = true;
         var geoFail = null;
         var geoOptions = { enableHighAccuracy: true }
         var latlng = new google.maps.LatLng(37.09024, -95.712891);
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 3,
+            zoom: 10,
             mapTypeId: 'satellite',
             center: latlng,
             disableDefaultUI: true
@@ -61,7 +62,13 @@ window.onload = function () {
             } else {
                 userMarker.setPosition(loc);
             }
-            update(false);
+            if (updateFirst) {
+                update(true);
+                updateFirst = false;
+                map.setZoom(17);
+            } else {
+                update(false);
+            }
         }
         watchId = navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
 
