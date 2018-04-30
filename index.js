@@ -70,6 +70,7 @@ window.onload = function () {
                 update(false);
             }
         }
+        
         watchId = navigator.geolocation.watchPosition(geoSuccess, geoFail, geoOptions);
 
         var checkbox = this.document.getElementById("watch");
